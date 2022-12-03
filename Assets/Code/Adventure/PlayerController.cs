@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SplitScreen
+namespace Adventure
 {
     public class PlayerController : MonoBehaviour
     {
         //Outlets
         Rigidbody2D _rigidbody;
+        Animator _animator;
 
         //Configuration
         public KeyCode keyUp;
@@ -24,9 +25,26 @@ namespace SplitScreen
         void Start()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
+            _animator = GetComponent<Animator>();
         }
 
         // Update is called once per frame
+        void Update()
+        {
+            float movementSpeed = _rigidbody.velocity.sqrMagnitude;
+            _animator.SetFloat("speed", movementSpeed);
+            if (movementSpeed > 0.1f)
+            {
+                _animator.SetFloat("movementX", _rigidbody.velocity.x);
+                _animator.SetFloat("movementY", _rigidbody.velocity.y);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                _animator.SetTrigger("attack");
+            }
+        }
+
         void FixedUpdate()
         {
             if (Input.GetKey(keyUp))
@@ -51,3 +69,4 @@ namespace SplitScreen
         }
     }
 }
+
